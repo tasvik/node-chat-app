@@ -1,10 +1,12 @@
 //load express & path
 const express = require('express');
 const path = require('path');
-
 //load socket io library
 const socketIO = require('socket.io');
 const http = require('http');
+
+//custom imports
+const {generateMessage} = require('./util/message');
 
 const publicFolder = path.join(__dirname, '../public');
 var port = process.env.PORT || 3000;
@@ -19,29 +21,17 @@ io.on('connection',(socket) => {
   console.log('New Client Connection');
 
   //Emit welcome message
-  socket.emit('newMessage', {
-    from: 'admin',
-    text: 'welcome to chat room !'
-  });
+  socket.emit('newMessage', generateMessage('admin', 'welcome to chat room !!'));
 
   //Broadcast that new message has entered
-  socket.broadcast.emit('newMessage', {
-    from: 'admin',
-    text: 'New user has joined',
-    createdAt: new Date().getTime()
-  });
+  socket.broadcast.emit('newMessage', generateMessage('admin', 'new user has joined'));
 
-  //Emit a custom event 'newMessage' using emit()
-  // Server ---> Client
-  // socket.emit('newMessage', {
-  //   from: 'newmessage@email.com',
-  //   text: 'This is new message',
-  //   createdAT: 'DDDD'
-  // });
-
-  //Recieve custom message from server
+  //Recieve custom event from client
   socket.on('createMessage', (msg) => {
     console.log('Recevied message from client', msg);
+    //Send to all a new message
+    io.emit('newMessage', generateMessage(msg.from, msg.text));
+    //
   });
 
   socket.on('disconnect', () => {
@@ -54,7 +44,6 @@ app.use(express.static(publicFolder));
 
 //start server
 server.listen(port, () => {
+  //Message to show that server has started
   console.log(`Node JS start at ${port}`);
 });
-
-//Message to show that server has started
