@@ -4,7 +4,7 @@ var socket = io();
 //action on an even 'connect'
 socket.on('connect', function() {
   console.log('Connected to server');
-  socket.emit('SendMessage', {
+  socket.emit('createMessage', {
     from: 'sendmessahe@email.com',
     text: 'Hello, How are you !!!'
   })
@@ -16,6 +16,6 @@ socket.on('disconnect', function() {
 });
 
 //action on event 'NewMessage'
-socket.on('NewMessage', function(newMsg) {
+socket.on('newMessage', function(newMsg) {
   console.log('Recevied new message', newMsg);
 });

@@ -18,13 +18,26 @@ var io = socketIO(server);
 io.on('connection',(socket) => {
   console.log('New Client Connection');
 
+  //Emit welcome message
+  socket.emit('newMessage', {
+    from: 'admin',
+    text: 'welcome to chat room !'
+  });
+
+  //Broadcast that new message has entered
+  socket.broadcast.emit('newMessage', {
+    from: 'admin',
+    text: 'New user has joined',
+    createdAt: new Date().getTime()
+  });
+
   //Emit a custom event 'newMessage' using emit()
   // Server ---> Client
-  socket.emit('newMessage', {
-    from: 'newmessage@email.com',
-    text: 'This is new message',
-    createdAT: 'DDDD'
-  });
+  // socket.emit('newMessage', {
+  //   from: 'newmessage@email.com',
+  //   text: 'This is new message',
+  //   createdAT: 'DDDD'
+  // });
 
   //Recieve custom message from server
   socket.on('createMessage', (msg) => {
