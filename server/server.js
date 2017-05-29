@@ -18,6 +18,19 @@ var io = socketIO(server);
 io.on('connection',(socket) => {
   console.log('New Client Connection');
 
+  //Emit a custom event 'newMessage' using emit()
+  // Server ---> Client
+  socket.emit('newMessage', {
+    from: 'newmessage@email.com',
+    text: 'This is new message',
+    createdAT: 'DDDD'
+  });
+
+  //Recieve custom message from server
+  socket.on('createMessage', (msg) => {
+    console.log('Recevied message from client', msg);
+  });
+
   socket.on('disconnect', () => {
     console.log('Client disconected');
   });

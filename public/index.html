@@ -7,19 +7,5 @@
 <body>
   <p>This is chat app</p>
   <script src="/socket.io/socket.io.js" charset="utf-8"></script>
-  <script type="text/javascript">
-    //initiate request to server
-    var socket = io();
-
-    //action on an even 'connect'
-    socket.on('connect', () => {
-      console.log('COnnected to server');
-    });
-
-    //action on an another event 'disconnect'
-    socket.on('disconnect',() => {
-      console.log('Disconnected to server')
-    });
-
-  </script>
+  <script src="/js/index.js" charset="utf-8"></script>
 </body>
