@@ -6,7 +6,7 @@ const socketIO = require('socket.io');
 const http = require('http');
 
 //custom imports
-const {generateMessage} = require('./util/message');
+const {generateMessage, generateLocationMessage} = require('./util/message');
 
 const publicFolder = path.join(__dirname, '../public');
 var port = process.env.PORT || 3000;
@@ -32,6 +32,11 @@ io.on('connection',(socket) => {
     //Send to all a new message
     io.emit('newMessage', generateMessage(msg.from, msg.text));
     //
+  });
+
+  //Receive custom event sendLocation
+  socket.on('sendLocation', (position) => {
+    socket.broadcast.emit('locationMessage', generateLocationMessage('admin', position.latitude, position.longitude));
   });
 
   socket.on('disconnect', () => {
