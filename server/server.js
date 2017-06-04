@@ -6,7 +6,10 @@ const socketIO = require('socket.io');
 const http = require('http');
 
 //custom imports
-const {generateMessage, generateLocationMessage} = require('./util/message');
+const {
+  generateMessage,
+  generateLocationMessage
+} = require('./util/message');
 
 const publicFolder = path.join(__dirname, '../public');
 var port = process.env.PORT || 3000;
@@ -17,7 +20,7 @@ var server = http.createServer(app);
 var io = socketIO(server);
 
 //open web socket when client initiates socket request
-io.on('connection',(socket) => {
+io.on('connection', (socket) => {
   console.log('New Client Connection');
 
   //Emit welcome message
@@ -36,7 +39,7 @@ io.on('connection',(socket) => {
 
   //Receive custom event sendLocation
   socket.on('sendLocation', (position) => {
-    socket.broadcast.emit('locationMessage', generateLocationMessage('admin', position.latitude, position.longitude));
+    io.emit('locationMessage', generateLocationMessage('admin', position.latitude, position.longitude));
   });
 
   socket.on('disconnect', () => {
