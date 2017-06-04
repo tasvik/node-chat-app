@@ -10,32 +10,49 @@ socket.on('disconnect', function() {
 socket.on('locationMessage', function(newMsg) {
   //created formatted time using moment
   var formattedTime = moment(newMsg.createdAt).format('h:mm a');
-  //create relevent html elment using jQuery
-  var li = jQuery('<li></li>');
-  var a = jQuery('<a target="_blank">My Location</a>');
+  var template = jQuery('#location-message-template').html();
+  var html = Mustache.render(template, {
+    from: newMsg.from,
+    createdAt: formattedTime,
+    url: newMsg.url
+  });
 
-  //set values of the html element
-  li.text(`${newMsg.from} ${formattedTime}:`);
-  a.attr('href', newMsg.url);
+  jQuery('#messages').append(html);
 
-  //apend the values
-  li.append(a);
-  jQuery('#messages').append(li);
+  // //create relevent html elment using jQuery
+  // var li = jQuery('<li></li>');
+  // var a = jQuery('<a target="_blank">My Location</a>');
+  //
+  // //set values of the html element
+  // li.text(`${newMsg.from} ${formattedTime}:`);
+  // a.attr('href', newMsg.url);
+  //
+  // //apend the values
+  // li.append(a);
+  // jQuery('#messages').append(li);
 });
 
 //action on event 'NewMessage'
 socket.on('newMessage', function(newMsg) {
-  console.log('Recevied new message', newMsg);
-  //create formatted time using moment
   var formattedTime = moment(newMsg.createdAt).format('h:mm a');
-  //create new element using jQuery
-  var li = jQuery('<li></li>');
-  //set text of the element list
-  li.text(`${newMsg.from} ${formattedTime}: ${newMsg.text}`);
+  var template = jQuery('#message-template').html();
+  var html = Mustache.render(template, {
+    text: newMsg.text,
+    from: newMsg.from,
+    createdAt: formattedTime
+  });
 
+  jQuery('#messages').append(html);
+  // console.log('Recevied new message', newMsg);
+  // //create formatted time using moment
 
-  //append list into order list using id
-  jQuery('#messages').append(li);
+  // //create new element using jQuery
+  // var li = jQuery('<li></li>');
+  // //set text of the element list
+  // li.text(`${newMsg.from} ${formattedTime}: ${newMsg.text}`);
+  //
+  // //append list into order list using id
+  // jQuery('#messages').append(li);
 });
 
 //action to be performed when user clicks submit button
